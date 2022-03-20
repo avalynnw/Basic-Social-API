@@ -36,6 +36,19 @@ function format_date(initial_date) {
   return final_date;
 }
 
+const nth = function (d) {
+  if (d > 3 && d < 21) return "th";
+  switch (d % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+};
 
 
 // Schema to create Student model
@@ -53,6 +66,7 @@ const reactionSchema = new Schema(
     createdAt: {
         type: Date,
         default: Date.now,
+        get: timestamp => format_date(timestamp)
       },
   },
   {

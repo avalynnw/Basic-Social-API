@@ -1,55 +1,6 @@
 const { Thought, User } = require("../models");
 
-// helper function to return the proper date ending for displaying the date
-const nth = function (d) {
-  if (d > 3 && d < 21) return "th";
-  switch (d % 10) {
-    case 1:
-      return "st";
-    case 2:
-      return "nd";
-    case 3:
-      return "rd";
-    default:
-      return "th";
-  }
-};
 
-function format_date(initial_date) {
-  let month = initial_date.toLocaleString("default", { month: "short" });
-  let day = initial_date.getDate();
-  let year = initial_date.toLocaleString("default", { year: "numeric" });
-  let hour = initial_date.getHours();
-  let minute = initial_date.getMinutes();
-
-  let ampm = "am";
-  if (hour > 12) {
-    hour = hour - 12;
-    if (hour < 10) {
-      hour = "0" + hour;
-    }
-    ampm = "pm";
-  }
-  if (minute < 10) {
-    minute = "0" + minute;
-  }
-
-  let final_date =
-    month +
-    " " +
-    day +
-    nth(day) +
-    ", " +
-    year +
-    " at " +
-    hour +
-    ":" +
-    minute +
-    " " +
-    ampm;
-
-  return final_date;
-}
 
 module.exports = {
   // get all thoughts
@@ -59,22 +10,11 @@ module.exports = {
         let thoughts_list = [];
         // extracts data from thoughts object and puts each item into a formatted list
         thoughts.forEach((thought, index) => {
-          let initial_date = thought.createdAt;
-
-          let formatted_date = format_date(initial_date);
-
-          let reaction_list = [];
-
           thoughts_list[index] = {
             _id: thought._id,
             thoughtText: thought.thoughtText,
             username: thought.username,
-            createdAt: formatted_date,
-            // reactions: thought.reactions.forEach((reaction, index) => {
-            //   reaction_list[index] = {
-            //     reactionBody: reaction.reactionBody,
-            //   }
-            // }),
+            createdAt: thought.createdAt,
             reactions: thought.reactions,
             __v: thought.__v,
             reactionCount: thought.reactionCount,
