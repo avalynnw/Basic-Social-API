@@ -10,8 +10,8 @@ const {
 //  /api/users
 router.route('/').get(getUsers).post(createUser);
 
-// TODO: /api/students/:UserId
-router.route('/:UserId').get(getSingleUser).delete(deleteUser);
+// TODO: /api/students/:id
+router.route('/:id').get(getSingleUser).delete(deleteUser);
 
 
 module.exports = router;

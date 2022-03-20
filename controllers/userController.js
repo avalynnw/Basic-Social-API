@@ -40,7 +40,7 @@ module.exports = {
 
   // get a single user
   getSingleUser(req, res) {
-    User.findOne({ _id: req.params.UserId })
+    User.findOne({ _id: req.params.id })
       .select('-__v')
       .then(async (user) =>
         
@@ -72,28 +72,17 @@ module.exports = {
 
 
 
-
-  // delete a user and remove their thoughts
-  deleteUser(req, res) {
-    User.findOneAndRemove({ _id: req.params.UserId })
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: 'No user exists with that ID' })
-          : Thought.deleteMany({ username: user.username })
-      )
-      .then((thought) =>
-        !thought
-          ? res.status(404).json({
-              message: 'User deleted, but no thoughts found',
-            })
-          : res.json({ message: 'User successfully deleted' })
-      )
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json(err);
-      });
-  },
-
-
-
+// delete a user
+deleteUser({ params }, res) {
+  User.findOneAndDelete({ _id: params.id })
+    .then((user) => {
+      if (!user) {
+        res.status(404).json({ message: 'No user found with this id!' });
+        return;
+      }
+      Thought.deleteMany({ username: user.username })
+      res.json({ message: 'User was deleted!' });
+    })
+    .catch((err) => res.status(400).json(err));
+},
 };
