@@ -7,15 +7,11 @@ const { User, Thought } = require("../models");
 //     .count("friendCount")
 //     .then((numberOfUsers) => numberOfUsers);
 
-
-
 module.exports = {
-
   // get all users
   getUsers(req, res) {
     User.find()
       .then(async (users) => {
-
         let user_list = [];
         // extracts data from users object and puts each item into a formatted list
         users.forEach((user, index) => {
@@ -37,15 +33,13 @@ module.exports = {
       });
   },
 
-
   // get a single user
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.id })
-      .select('-__v')
+      .select("-__v")
       .then(async (user) =>
-        
         !user
-          ? res.status(404).json({ message: 'No user with that ID' })
+          ? res.status(404).json({ message: "No user with that ID" })
           : res.json({
               thoughts: user.thoughts,
               friends: user.friends,
@@ -61,7 +55,6 @@ module.exports = {
       });
   },
 
-
   // create a new user
   createUser(req, res) {
     User.create(req.body)
@@ -69,54 +62,68 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
 
-
-
-
-
   // delete a user and remove their thoughts
-  // deleteUser(req, res) {
-  //   User.findOneAndRemove({ _id: req.params.id })
-  //     .then((user) =>
-  //       !user
-  //         ? res.status(404).json({ message: 'No user exists with that ID' })
-  //         : Thought.deleteMany({ username: user.username })
-  //     )
-  //     .then((thought) =>
-  //       !thought
-  //         ? res.status(404).json({
-  //             message: 'User deleted, but no thoughts found',
-  //           })
-  //         : res.json({ message: 'User successfully deleted' })
-  //     )
-  //     .catch((err) => {
-  //       console.log(err);
-  //       res.status(500).json(err);
-  //     });
-  // },
-
   deleteUser(req, res) {
-    User.findOneAndDelete({ _id: req.params.id })
-    .then((user) =>
-    !user
-      ? res.status(404).json({ message: 'No user with that ID' })
-      : Thought.deleteMany({ username: user.username })
-    )
-    .then(() => res.json({ message: 'User and thoughts deleted!' }))
-    .catch((err) => res.status(500).json(err));
+    User.findOneAndRemove({ _id: req.params.id })
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: "No user exists with that ID" })
+          : Thought.deleteMany({ username: user.username })
+      )
+      .then((thought) =>
+        !thought
+          ? res.status(404).json({
+              message: "User deleted, but no thoughts found",
+            })
+          : res.json({ message: "User and thoughts successfully deleted" })
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
   },
 
-  // delete a user
-  // deleteUser({ params }, res) {
-  //   User.findOneAndDelete({ _id: params.id })
-  //     .then((user) => {
-  //       if (!user) {
-  //         res.status(404).json({ message: 'No user found with this id!' });
-  //         return;
-  //       }
 
-  //       Thought.deleteMany({ username: user.username })
-  //       res.json({ message: 'User was deleted!' });
-  //     })
-  //     .catch((err) => res.status(400).json(err));
+
+
+
+
+
+  addFriend(req, res) {
+    User.findById(req.id)
+      .then((user) => {
+        return User.findOneAndUpdate(
+          { _id: req.params.friendID },
+          { $addToSet: { friends: user._id } },
+          { runValidators: true, new: true }
+        );
+      })
+
+
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: "unable to find user" })
+          : res.json("added the friend!")
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  },
+
+
+
+
+
+  // deleteUser(req, res) {
+  //   User.findOneAndDelete({ _id: req.params.id })
+  //   .then((user) => {
+  //   !user
+  //     ? res.status(404).json({ message: 'No user with that ID' })
+  //     : Thought.deleteMany({ username: user.username })
+
+  //   })
+  //   .then(() => res.json({ message: 'User and thoughts deleted!' }))
+  //   .catch((err) => res.status(500).json(err));
   // },
 };
