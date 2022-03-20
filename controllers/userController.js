@@ -88,18 +88,16 @@ module.exports = {
 
 
 
-
+  // add a friend
   addFriend(req, res) {
     User.findById(req.params.id)
       .then((user) => {
         return User.findOneAndUpdate(
-          { _id: req.params.friendId },
-          { $addToSet: { friends: user.id } },
-          { runValidators: true}
+          { _id: req.params.id },
+          { $addToSet: { friends: req.params.friendId } },
+          { runValidators: true, new: true}
         );
       })
-
-
       .then((user) =>
         !user
           ? res.status(404).json({ message: "unable to find user" })
@@ -111,7 +109,26 @@ module.exports = {
       });
   },
 
-
+  // delete a friend
+  deleteFriend(req, res) {
+    User.findById(req.params.id)
+    .then((user) => {
+      return User.findOneAndUpdate(
+        { _id: req.params.id },
+        { $pull: { friends: req.params.friendId } },
+        { runValidators: true, new: true}
+      );
+    })
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: "unable to find user" })
+        : res.json(user)
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+  }
 
 
 
