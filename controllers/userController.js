@@ -95,7 +95,7 @@ module.exports = {
         return User.findOneAndUpdate(
           { _id: req.params.friendId },
           { $addToSet: { friends: user.id } },
-          { runValidators: true, new: true }
+          { runValidators: true}
         );
       })
 
@@ -103,7 +103,7 @@ module.exports = {
       .then((user) =>
         !user
           ? res.status(404).json({ message: "unable to find user" })
-          : res.json("added the friend!")
+          : res.json(user)
       )
       .catch((err) => {
         console.log(err);
