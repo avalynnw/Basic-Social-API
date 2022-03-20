@@ -72,17 +72,51 @@ module.exports = {
 
 
 
-// delete a user
-deleteUser({ params }, res) {
-  User.findOneAndDelete({ _id: params.id })
-    .then((user) => {
-      if (!user) {
-        res.status(404).json({ message: 'No user found with this id!' });
-        return;
-      }
-      Thought.deleteMany({ username: user.username })
-      res.json({ message: 'User was deleted!' });
-    })
-    .catch((err) => res.status(400).json(err));
-},
+
+  // delete a user and remove their thoughts
+  // deleteUser(req, res) {
+  //   User.findOneAndRemove({ _id: req.params.id })
+  //     .then((user) =>
+  //       !user
+  //         ? res.status(404).json({ message: 'No user exists with that ID' })
+  //         : Thought.deleteMany({ username: user.username })
+  //     )
+  //     .then((thought) =>
+  //       !thought
+  //         ? res.status(404).json({
+  //             message: 'User deleted, but no thoughts found',
+  //           })
+  //         : res.json({ message: 'User successfully deleted' })
+  //     )
+  //     .catch((err) => {
+  //       console.log(err);
+  //       res.status(500).json(err);
+  //     });
+  // },
+
+  deleteUser(req, res) {
+    User.findOneAndDelete({ _id: req.params.id })
+    .then((user) =>
+    !user
+      ? res.status(404).json({ message: 'No user with that ID' })
+      : Thought.deleteMany({ username: user.username })
+    )
+    .then(() => res.json({ message: 'User and thoughts deleted!' }))
+    .catch((err) => res.status(500).json(err));
+  },
+
+  // delete a user
+  // deleteUser({ params }, res) {
+  //   User.findOneAndDelete({ _id: params.id })
+  //     .then((user) => {
+  //       if (!user) {
+  //         res.status(404).json({ message: 'No user found with this id!' });
+  //         return;
+  //       }
+
+  //       Thought.deleteMany({ username: user.username })
+  //       res.json({ message: 'User was deleted!' });
+  //     })
+  //     .catch((err) => res.status(400).json(err));
+  // },
 };
