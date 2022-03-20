@@ -63,11 +63,18 @@ module.exports = {
 
           let formatted_date = format_date(initial_date);
 
+          let reaction_list = [];
+
           thoughts_list[index] = {
             _id: thought._id,
             thoughtText: thought.thoughtText,
             username: thought.username,
             createdAt: formatted_date,
+            // reactions: thought.reactions.forEach((reaction, index) => {
+            //   reaction_list[index] = {
+            //     reactionBody: reaction.reactionBody,
+            //   }
+            // }),
             reactions: thought.reactions,
             __v: thought.__v,
             reactionCount: thought.reactionCount,
@@ -172,7 +179,7 @@ module.exports = {
       .then((thought) =>
         !thought
           ? res.status(404).json({ message: "unable to find thought by that id" })
-          : res.json(user)
+          : res.json(thought)
       )
       .catch((err) => {
         console.log(err);
