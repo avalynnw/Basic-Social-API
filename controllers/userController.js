@@ -90,11 +90,11 @@ module.exports = {
 
 
   addFriend(req, res) {
-    User.findById(req.id)
+    User.findById(req.params.id)
       .then((user) => {
         return User.findOneAndUpdate(
-          { _id: req.params.friendID },
-          { $addToSet: { friends: user._id } },
+          { _id: req.params.friendId },
+          { $addToSet: { friends: user.id } },
           { runValidators: true, new: true }
         );
       })
