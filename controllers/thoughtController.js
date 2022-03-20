@@ -127,7 +127,26 @@ module.exports = {
       });
   },
 
-
+  // delete a reaction
+  deleteReaction(req, res) {
+    Thought.findById(req.params.id)
+    .then((thought) => {
+      return Thought.findOneAndUpdate(
+        { _id: req.params.id },
+        { $pull: { reactions: req.params.reactionId } },
+        { runValidators: true, new: true}
+      );
+    })
+    .then((thought) =>
+      !thought
+        ? res.status(404).json({ message: "unable to find reaction by that id" })
+        : res.json(thought)
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+  }
 
 
 };

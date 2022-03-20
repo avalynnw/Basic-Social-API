@@ -1,11 +1,6 @@
 const { MongoDriverError } = require("mongodb");
 const { User, Thought } = require("../models");
 
-// aggregate function to get the number of friends
-// const friendCount = async () =>
-//   User.aggregate()
-//     .count("friendCount")
-//     .then((numberOfUsers) => numberOfUsers);
 
 module.exports = {
 
