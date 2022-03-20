@@ -7,13 +7,14 @@ const {
     deleteUser,
     addFriend,
     deleteFriend,
+    updateUser,
 } =require ('../../controllers/userController')
 
 //  /api/users
 router.route('/').get(getUsers).post(createUser);
 
 // TODO: /api/users/:id
-router.route('/:id').get(getSingleUser).delete(deleteUser);
+router.route('/:id').get(getSingleUser).put(updateUser).delete(deleteUser);
 
 
 

@@ -8,6 +8,8 @@ const { User, Thought } = require("../models");
 //     .then((numberOfUsers) => numberOfUsers);
 
 module.exports = {
+
+  // ================== USER ROUTES =========================
   // get all users
   getUsers(req, res) {
     User.find()
@@ -62,7 +64,40 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
 
-  // delete a user and remove their thoughts
+
+
+  // update username
+  updateUser(req,res) {
+    User.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: { username: req.body.username} },
+      { runValidators: true, new: true },
+    )
+      .then((user) => {
+        if (!user) {
+          res.status(404).json('no user found with that id')
+        } else {
+          res.json(user)
+        }
+      })
+      .catch((err) => res.status(500).json(err));
+  },
+
+
+  // Delete a user and associated thoughts
+  // deleteUser(req, res) {
+  //   User.findOneAndDelete({ _id: req.params.id })
+  //     .then((user) =>
+  //       !user
+  //         ? res.status(404).json({ message: 'No user with that ID' })
+  //         : Thought.deleteMany({ username: { $in: user.thoughts } })
+  //     )
+  //     .then(() => res.json({ message: 'User and associated apps deleted!' }))
+  //     .catch((err) => res.status(500).json(err));
+  // },
+
+
+  // delete a user and remove their thoughts 
   deleteUser(req, res) {
     User.findOneAndRemove({ _id: req.params.id })
       .then((user) =>
@@ -85,9 +120,7 @@ module.exports = {
 
 
 
-
-
-
+  // ================== FRIEND ROUTES =========================
   // add a friend
   addFriend(req, res) {
     User.findById(req.params.id)
@@ -100,7 +133,7 @@ module.exports = {
       })
       .then((user) =>
         !user
-          ? res.status(404).json({ message: "unable to find user" })
+          ? res.status(404).json({ message: "unable to find user by that id" })
           : res.json(user)
       )
       .catch((err) => {
@@ -121,7 +154,7 @@ module.exports = {
     })
     .then((user) =>
       !user
-        ? res.status(404).json({ message: "unable to find user" })
+        ? res.status(404).json({ message: "unable to find user by that id" })
         : res.json(user)
     )
     .catch((err) => {
@@ -132,15 +165,4 @@ module.exports = {
 
 
 
-  // deleteUser(req, res) {
-  //   User.findOneAndDelete({ _id: req.params.id })
-  //   .then((user) => {
-  //   !user
-  //     ? res.status(404).json({ message: 'No user with that ID' })
-  //     : Thought.deleteMany({ username: user.username })
-
-  //   })
-  //   .then(() => res.json({ message: 'User and thoughts deleted!' }))
-  //   .catch((err) => res.status(500).json(err));
-  // },
 };
