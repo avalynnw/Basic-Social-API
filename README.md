@@ -16,7 +16,7 @@ This program is desinged to be able to interact with a database using mongoose t
 
 Clone this project your personal computer using the command: 
 
-	git clone git@github.com:avalynnw/SQL-Employee-Database
+	git clone git@github.com:avalynnw/Basic-Social-API.git
 
 Then, use: 
 
