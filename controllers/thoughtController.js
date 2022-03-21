@@ -2,6 +2,9 @@ const { Thought, User } = require("../models");
 
 
 
+
+
+
 module.exports = {
   // get all thoughts
   getThoughts(req, res) {
@@ -57,7 +60,7 @@ module.exports = {
               _id: thought._id,
               thoughtText: thought.thoughtText,
               username: thought.username,
-              createdAt: format_date(thought.createdAt),
+              createdAt: thought.createdAt,
               reactions: thought.reactions,
               __v: thought.__v,
               reactionCount: thought.reactionCount,
@@ -112,7 +115,7 @@ module.exports = {
       .then((thought) => {
         return Thought.findOneAndUpdate(
           { _id: req.params.id },
-          { $addToSet: { reactions: { reactionBody: req.body.reactionBody, username: thought.username } } },
+          { $addToSet: { reactions: { reactionBody: req.body.reactionBody, username: req.body.username } } },
           { runValidators: true, new: true}
         );
       })
@@ -127,11 +130,13 @@ module.exports = {
       });
   },
 
+
   // delete a reaction
   deleteReaction(req, res) {
     Thought.findOneAndUpdate(
       { _id: req.params.id },
-      { $pull: { reactions: req.params.reactionId } },
+      // { $pull: { reactions: req.params.reactionId } },
+      { $pull: { reactions: { reactionId: req.params.reactionId } } },
       { runValidators: true, new: true}
     )
     .then((thought) =>
