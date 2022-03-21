@@ -25,24 +25,18 @@ connection.once('open', async () => {
 
     const username = getRandomUsername();
     const email = username + "@fakemail.com"
-    // const thoughts = getRandomThoughts(2);
     console.log(username +" "+ email);
-    // const github = `${first}${Math.floor(Math.random() * (99 - 18 + 1) + 18)}`;
-    const friends = [];
-
-
-    // TODO: FINISH THIS
+    const thoughtText = getRandomThought();
 
 
 
     users.push({
       username,
       email,
-      thoughts,
-      friends,
     });
     thoughts.push({
-      thoughtText  
+      thoughtText,
+      username,
     });
 
   }
@@ -51,11 +45,7 @@ connection.once('open', async () => {
   await User.collection.insertMany(users);
 
   // Add courses to the collection and await the results
-  await Thought.collection.insertOne({
-    courseName: 'UCLA',
-    inPerson: false,
-    students: [...students],
-  });
+  await Thought.collection.insertMany(thoughts)
 
   // Log out the seed data to indicate what should appear in the database
   console.table(users);
