@@ -129,16 +129,11 @@ module.exports = {
 
   // delete a reaction
   deleteReaction(req, res) {
-    Thought.findById(req.params.id)
-    .then((thought) => {
-      console.log("req.params.id: ", req.params.id)
-      console.log("req.params.reactionID: ", req.params.reactionID)
-      return Thought.findOneAndUpdate(
-        { _id: req.params.id },
-        { $pull: { reactions: req.params.reactionID } },
-        { runValidators: true, new: true}
-      );
-    })
+    Thought.findOneAndUpdate(
+      { _id: req.params.id },
+      { $pull: { reactions: req.params.reactionId } },
+      { runValidators: true, new: true}
+    )
     .then((thought) =>
       !thought
         ? res.status(404).json({ message: "unable to find reaction by that id" })
